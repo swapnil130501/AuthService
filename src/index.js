@@ -4,8 +4,7 @@ const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/index');
 const { PORT } = require('./config/serverConfig');
 
-// const UserRepository = require('./repository/user-repository');
-
+// const UserService = require('./services/user-service');
 const app = express();
 
 const prepareAndStartServer = () => {
@@ -16,10 +15,14 @@ const prepareAndStartServer = () => {
     
     app.listen(PORT, async () => {
         console.log(`Server started on Port: ${PORT}`);
-        // const repo = new UserRepository();
-        // const response = await repo.getById(1);
-        // console.log(response);
         
+        // const service = new UserService();
+        // // const newToken = service.createToken({email: 'swapnil@admin.com', id: 1});
+        // // console.log("new token is", newToken);
+
+        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN3YXBuaWxAYWRtaW4uY29tIiwiaWQiOjEsImlhdCI6MTY4NTM1MDkzMywiZXhwIjoxNjg1NDM3MzMzfQ.d4mvKItj3gnY0Vd8SN0XZWsnHFHB-f-ojpemutC8HBI';
+        // const response = service.verifyToken(token);
+        // console.log(response);
     })
 }
 prepareAndStartServer();
