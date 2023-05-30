@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/index');
 const { PORT } = require('./config/serverConfig');
 
+const {User,Role} = require('./models/index');
+
 const db = require('./models/index');
 
 // const UserService = require('./services/user-service');
@@ -20,6 +22,10 @@ const prepareAndStartServer = () => {
         if(process.env.DB_SYNC){
             db.sequelize.sync({alter: true});
         }
+
+        const u1 = await User.findByPk(2);
+        const r1 = await Role.findByPk(1);
+        u1.addRole(r1);
         
         // const service = new UserService();
         // // const newToken = service.createToken({email: 'swapnil@admin.com', id: 1});
