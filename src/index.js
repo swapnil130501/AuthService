@@ -23,9 +23,9 @@ const prepareAndStartServer = () => {
             db.sequelize.sync({alter: true});
         }
 
-        const u1 = await User.findByPk(2);
-        const r1 = await Role.findByPk(1);
-        u1.addRole(r1);
+        // const u1 = await User.findByPk(2);
+        // const r1 = await Role.findByPk(1);
+        // u1.addRole(r1);
         
         // const service = new UserService();
         // // const newToken = service.createToken({email: 'swapnil@admin.com', id: 1});
