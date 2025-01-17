@@ -65,6 +65,92 @@ const isAuthenticated = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const response = await userService.deleteUser(req.params.id, token);
+        return res.status(200).json({
+            data: response,
+            message: "Successfully deleted User",
+            err: {},
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: {},
+            message: "Cannot delete User",
+            err: error,
+            success: false
+        });
+    }
+}
+
+const updateUser = async (req, res) => {
+    try {
+        // const token = req.headers['x-access-token'];
+        const response = await userService.updateUser(req.params.id, req.body);
+        return res.status(200).json({
+            data: response,
+            message: "Successfully updated User",
+            err: {},
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: {},
+            message: "Cannot update User",
+            err: error,
+            success: false
+        });
+    }
+}
+
+const fetchUser = async (req, res) => {
+    try {
+        const response = await userService.getUser(req.params.id);
+        const { email, id } = response; // Destructuring email and id from response
+        return res.status(200).json({
+            email, // Shorthand property name: equivalent to email: email
+            id,    // Shorthand property name: equivalent to id: id
+            message: "Successfully fetched the User",
+            err: {},
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: {},
+            message: "Cannot fetch the User",
+            err: error,
+            success: false
+        });
+    }
+}
+
+
+const fetchAllUsers = async (req, res) => {
+    try {
+        // const token = req.headers['x-access-token'];
+        const response = await userService.getAllUsers();
+        return res.status(200).json({
+            data: response,
+            message: "Successfully fetched the User",
+            err: {},
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: {},
+            message: "Cannot fetch the User",
+            err: error,
+            success: false
+        });
+    }
+}
+
 const isAdmin = async(req, res) => {
     try {
         const response = await userService.isAdmin(req.body.id);
@@ -89,5 +175,9 @@ module.exports = {
     create,
     signIn,
     isAuthenticated,
+    deleteUser,
+    updateUser,
+    fetchUser,
+    fetchAllUsers,
     isAdmin
 }

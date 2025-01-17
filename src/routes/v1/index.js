@@ -22,6 +22,26 @@ router.get(
     UserController.isAuthenticated,
 );
 
+router.patch(
+    '/user/update/:id', 
+    UserController.updateUser
+);
+
+router.delete(
+    '/user/delete/:id', 
+    UserController.deleteUser
+);
+
+router.get(
+    '/user/:id',
+    UserController.fetchUser
+);
+
+router.get(
+    '/users',
+    UserController.fetchAllUsers
+);
+
 router.get(
     '/isAdmin',
     AuthRequestValidators.validateIsAdminRequest,

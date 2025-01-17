@@ -10,6 +10,9 @@ const db = require('./models/index');
 
 // const UserService = require('./services/user-service');
 const app = express();
+const cors = require('cors');
+
+app.use(cors());
 
 const prepareAndStartServer = () => {
 
@@ -23,7 +26,7 @@ const prepareAndStartServer = () => {
             db.sequelize.sync({alter: true});
         }
 
-        // const u1 = await User.findByPk(2);
+        // const u1 = await User.findByPk(1);
         // const r1 = await Role.findByPk(1);
         // u1.addRole(r1);
         

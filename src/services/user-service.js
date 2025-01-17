@@ -19,20 +19,80 @@ class UserService{
         }
     }
 
-    async delete(){
+    async deleteUser(userId, token){
         try {
-            
+            const user = await this.userRepository.getById(userId);
+            if(!user){
+                throw {error: 'User not found'};
+            }
+            let verificationResponse = this.verifyToken(token);
+            if(!verificationResponse){
+                throw {error: 'Token verification error'};
+            }
+            await this.userRepository.destroy(userId);
+            return true;
         } catch (error) {
-            console.log("Something went wrong in the service layer");
             throw error;
         }
     }
+
+    async updateUser(userId, data){
+        try {
+            const user = await this.userRepository.getById(userId);
+            if(!user){
+                throw {error: 'User not found'};
+            }
+            // let verificationResponse = this.verifyToken(token);
+            // if(!verificationResponse){
+            //     throw {error: 'Token verification error'};
+            // }
+            const response = await this.userRepository.update(userId, data);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getUser(userId) {
+        try {
+            const user = await this.userRepository.getById(userId);
+        
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            // const verificationResponse = this.verifyToken(token);
+            // if (!verificationResponse) {
+            //     throw new Error('Token verification error');
+            // }
+
+             return user;
+
+        } catch (error) {
+            throw error;
+        }
+    } 
+    
+    async getAllUsers() {
+        try {
+            // const verificationResponse = this.verifyToken(token);
+            // if (!verificationResponse) {
+            //     throw new Error('Token verification error');
+            // }
+
+            const users = this.userRepository.getAll();
+            return users;
+             
+        } catch (error) {
+            throw error;
+        }
+    } 
 
     async signIn(email, plainPassword) {
         try {
             // step 1-> fetch the user using the email
             const user = await this.userRepository.getByEmail(email);
-            // step 2-> compare incoming plain password with stores encrypted password
+            // step 2-> compare incoming plain password with stored encrypted password
             const passwordsMatch = this.checkPassword(plainPassword, user.password);
 
             if(!passwordsMatch) {

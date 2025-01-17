@@ -38,6 +38,34 @@ class UserRepository {
         }
     }
 
+    async getAll() {
+        try {
+            const users = await User.findAll({
+                attributes: ['email', 'id'] // Specify the attributes to retrieve
+            });
+            return users;
+        } catch (error) {
+            console.error('Something went wrong in the repository layer:', error);
+            throw error;
+        }
+    }
+
+    async update(userId, data) {
+        try {
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            
+            await user.update(data);
+            return user;
+            
+        } catch (error) {
+            console.log("Something went wrong in the repository layer");
+            throw error;
+        }
+    }
+
     async getByEmail(userEmail) {
         try {
             const user = await User.findOne({where: {
