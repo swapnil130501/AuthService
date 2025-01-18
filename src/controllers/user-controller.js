@@ -1,6 +1,7 @@
 const  UserService  = require('../services/user-service');
 
 const userService = new UserService();
+
 const create = async (req, res) => {
     try {
         const response = await userService.create({
@@ -171,6 +172,34 @@ const isAdmin = async(req, res) => {
     }
 }
 
+const validateTokenAndRole = async (req, res) => {
+    try {
+        const { token } = req.body;
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                isAdmin: false,
+                message: 'Token is required',
+            });
+        }
+
+        const response = await userService.validateTokenAndRole(req.body.token);
+        return res.status(200).json({
+            success: response.success,
+            isAdmin: response.isAdmin,
+            user: { id: response.userId },
+        });
+    } catch (error) {
+        console.error('Error in validateTokenAndRole controller:', error.message);
+        return res.status(500).json({
+            success: false,
+            isAdmin: false,
+            message: 'Internal server error',
+            err: error.message,
+        });
+    }
+}
+
 module.exports = {
     create,
     signIn,
@@ -179,5 +208,6 @@ module.exports = {
     updateUser,
     fetchUser,
     fetchAllUsers,
-    isAdmin
+    isAdmin,
+    validateTokenAndRole
 }

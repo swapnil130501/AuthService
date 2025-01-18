@@ -108,20 +108,38 @@ class UserService{
         }
     }
 
-    async isAuthenticated(token){
+    async isAuthenticated(token) {
         try {
             const response = await this.verifyToken(token);
-            if(!response){
-                throw {error: 'Invalid token'};
+            if (!response) {
+                return {
+                    success: false,
+                    data: null,
+                    message: 'Invalid token',
+                };
             }
+    
             const user = await this.userRepository.getById(response.id);
-            if(!user){
-                throw {error: 'No user with corresponding token exists'};
+            if (!user) {
+                return {
+                    success: false,
+                    data: null,
+                    message: 'No user with corresponding token exists',
+                };
             }
-            return user.id;
+    
+            return {
+                success: true,
+                userId: user.id, // Return the user ID in the data field
+                message: 'User is authenticated and token is valid',
+            };
         } catch (error) {
-            console.log("Something went wrong in authentication");
-            throw error;
+            console.log('Something went wrong in authentication:', error.message);
+            return {
+                success: false,
+                data: null,
+                message: 'Internal server error during authentication',
+            };
         }
     }
 
@@ -134,6 +152,7 @@ class UserService{
             throw error;
         }
     }
+
     verifyToken(token) {
         try {
             const response = jwt.verify(token, JWT_KEY);
@@ -158,6 +177,37 @@ class UserService{
             return this.userRepository.isAdmin(userId);
         } catch (error) {
             console.log("Something went wrong in service layer");
+            throw error;
+        }
+    }
+
+    /**
+     * Validates the token and checks if the user has an admin role.
+     * @param {string} token - The JWT token provided by the client.
+     * @returns {object} - An object containing user ID and admin status.
+     */
+    async validateTokenAndRole(token) {
+        try {
+            // Step 1: Call isAuthenticated endpoint and parse the response
+            const response = await this.isAuthenticated(token);
+            console.log(response);
+
+            if (!response.success) {
+                throw new Error('Token is invalid or authentication failed');
+            }
+
+            const userId = response.userId; // Extract the user ID from the response
+
+            // Step 2: Check if the user has an admin role
+            const isAdmin = await this.isAdmin(userId);
+
+            return {
+                success: true,
+                userId,
+                isAdmin,
+            };
+        } catch (error) {
+            console.error('Error in UserService.validateTokenAndRole:', error.message);
             throw error;
         }
     }

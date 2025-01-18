@@ -3,7 +3,6 @@ const express = require('express');
 const UserController = require('../../controllers/user-controller');
 const {AuthRequestValidators} = require('../../middlewares/index');
 
-
 const router = express.Router();
 
 router.post(
@@ -47,5 +46,7 @@ router.get(
     AuthRequestValidators.validateIsAdminRequest,
     UserController.isAdmin
 );
+
+router.post('/auth/verify-admin', UserController.validateTokenAndRole);
 
 module.exports = router;
